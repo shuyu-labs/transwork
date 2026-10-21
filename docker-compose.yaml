@@ -1,10 +1,12 @@
 version: "2.4"
 
 # TransWork 演示环境
-# 启动：docker-compose up -d
+# 启动：docker compose up -d
 # 管理后台：http://localhost:3000/admin
+# WebAgent：http://localhost:4100
 #
 # 这里的账号密码仅用于演示环境，请勿直接用于生产部署。
+# 生产部署请先按 README「生产部署安全清单」逐项改密。
 services:
   transwork-web:
     image: registry.cn-hangzhou.aliyuncs.com/tree456/transwork-web:1.0.0
@@ -69,6 +71,46 @@ services:
       retries: 5
       start_period: 20s
 
+  # 浏览器版数字员工（WebAgent）：无需安装桌面客户端即可体验对话、技能与交付物预览
+  transwork-webagent:
+    image: registry.cn-hangzhou.aliyuncs.com/tree456/transwork-webagent:1.0.0
+    container_name: transwork-webagent
+    restart: unless-stopped
+    ports:
+      - "${WEBAGENT_HTTP_PORT:-4100}:4100"
+    environment:
+      # HTTP 演示不能使用 Secure Cookie；HTTPS 部署时改为 production。
+      NODE_ENV: "${WEBAGENT_NODE_ENV:-development}"
+      HOST: 0.0.0.0
+      PORT: "4100"
+      # 这是服务端访问后台的地址，不是浏览器访问 WebAgent 的地址。
+      PATH2AI_WEB_BASE_URL: "${PATH2AI_WEB_BASE_URL:-http://transwork-web:3000}"
+      PATH2AI_WEB_TIMEOUT_MS: "${PATH2AI_WEB_TIMEOUT_MS:-30000}"
+      WEBAGENT_DATA_DIR: /app/data
+      # HTTP 演示模式也保持生产镜像的工具隔离默认值。
+      WEBAGENT_ALLOW_STDIO_MCP: "false"
+      # 命令执行：默认 off（只演示问答）。要演示生成 Word/Excel，
+      # 把 .env 里 WEBAGENT_SANDBOX 改成 docker，并叠加 docker-compose.sandbox.yaml。
+      WEBAGENT_SANDBOX: "${WEBAGENT_SANDBOX:-off}"
+      WEBAGENT_SANDBOX_IMAGE: "${WEBAGENT_SANDBOX_IMAGE:-registry.cn-hangzhou.aliyuncs.com/tree456/transwork-webagent-sandbox:1.0.0}"
+      WEBAGENT_SANDBOX_HOST_DATA_DIR: "${WEBAGENT_SANDBOX_HOST_DATA_DIR:-}"
+      WEBAGENT_SANDBOX_NETWORK: "${WEBAGENT_SANDBOX_NETWORK:-false}"
+      FILE_EXTRACTION_BASE_URL: "${FILE_EXTRACTION_BASE_URL}"
+      FILE_EXTRACTION_SERVICE_TOKEN: "${FILE_EXTRACTION_SERVICE_TOKEN}"
+    volumes:
+      - transwork-webagent-data:/app/data
+    depends_on:
+      transwork-web:
+        condition: service_healthy
+      fileext:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4100/api/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
   fileext:
     image: registry.cn-hangzhou.aliyuncs.com/tree456/transwork-fileext:1.0.0
     container_name: transwork-fileext
@@ -100,4 +142,5 @@ services:
 
 volumes:
   transwork-data:
+  transwork-webagent-data:
   transwork-postgres-data:

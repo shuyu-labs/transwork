@@ -1,0 +1,26 @@
+# 命令执行沙箱叠加文件（只在需要「生成 Word / Excel」时使用）
+#
+# 用法：
+#   docker-compose -f docker-compose.yaml -f docker-compose.sandbox.yaml up -d transwork-webagent
+#
+# 前置条件（缺一个都跑不起来，日志里会打印原因）：
+#   1. 宿主机已构建沙箱镜像：docker image inspect path2ai-webagent-sandbox:1
+#   2. .env 里 WEBAGENT_SANDBOX=docker
+#   3. .env 里 WEBAGENT_SANDBOX_HOST_DATA_DIR 指向 transwork-webagent-data 卷的宿主机路径
+#
+# 安全说明：这里把宿主机 docker.sock 交给 WebAgent 容器，等同于给它 root 权限。
+# 仅用于单机演示；对外提供服务时请改为独立沙箱节点或关闭命令执行。
+
+services:
+  transwork-webagent:
+    environment:
+      WEBAGENT_SANDBOX: docker
+    # 容器以 uid 1000(node) 运行，而 /var/run/docker.sock 属于 root:docker(660)，
+    # 必须把宿主 docker 组补进来，否则 socket 挂上了也连不上（Permission denied）
+    group_add:
+      - "${DOCKER_GID:-988}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # 镜像里没有 docker CLI 时，直接借宿主机的（Debian 基础镜像一般可用）
+      # 路径用 `which docker` 确认后填到 .env 的 DOCKER_CLI_PATH
+      - ${DOCKER_CLI_PATH:-/usr/bin/docker}:/usr/bin/docker:ro
