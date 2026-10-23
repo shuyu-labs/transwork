@@ -24,7 +24,7 @@
 | **AI 员工目录**：按角色挑选数字员工 | **技能中心**：技能包一键获取 |
 | <img src="assets/screenshots/12-client-employees.png" width="440" /> | <img src="assets/screenshots/13-client-skills.png" width="440" /> |
 
-**浏览器版 WebAgent**：不用装客户端，打开浏览器用后台账号登录，同一套员工与技能直接开工。
+**浏览器版 WebAgent**：不用装客户端，打开浏览器用后台账号登录，同一套员工与技能直接开工。在线演示：https://transwork-agent.tree456.com/
 
 | 登录：账号与权限来自后台 | 首页：直接向数字员工下达任务 |
 | --- | --- |
@@ -73,6 +73,7 @@
 
 - **站点地址**：https://transwork.tree456.com/
 - **管理后台**：https://transwork.tree456.com/admin
+- **浏览器版 WebAgent**：https://transwork-agent.tree456.com/
 - **演示管理员账号**：`admin` / `TransWork_Admin_2026`
 
 体验步骤：
@@ -81,6 +82,8 @@
 2. 下载并安装桌面客户端（见下文「桌面客户端」）；
 3. 在客户端登录页点右下角「服务器设置」，将系统服务器地址配置为 `https://transwork.tree456.com/`；
 4. 用创建的账号登录客户端，即可使用技能市场、数字员工与知识库。
+
+不想安装客户端时，跳过第 2、3 步，直接用第 1 步创建的账号登录浏览器版 WebAgent（https://transwork-agent.tree456.com/），员工、技能与知识库与客户端完全一致。
 
 > 演示站点为公开环境，请勿存放敏感信息；演示管理员账号仅用于功能预览，请勿修改站点配置或他人数据。
 
@@ -160,7 +163,7 @@ sh verify.sh
 
 首次使用：在客户端登录页点右下角「服务器设置」，将系统服务器地址填为你的服务端地址（自建部署填自己的域名，在线体验填 `https://transwork.tree456.com/`），显示「服务器验证通过」后，用管理员在后台「用户管理」中分配的账号登录。SSO 登录方式会在客户端登录页自动发现，无需把平台密钥写入客户端。
 
-不想安装客户端时，直接用浏览器访问 `http://<服务器IP>:4100/` 使用 WebAgent。它用后台已激活并分配角色的普通用户账号登录（不是管理员账号），会话与工作区独立保存在 `transwork-webagent-data` 卷中；后台需先完成授权、用户、角色与模型配置。
+不想安装客户端时，直接用浏览器访问 `http://<服务器IP>:4100/` 使用 WebAgent（在线演示：https://transwork-agent.tree456.com/）。它用后台已激活并分配角色的普通用户账号登录（不是管理员账号），会话与工作区独立保存在 `transwork-webagent-data` 卷中；后台需先完成授权、用户、角色与模型配置。
 
 ## 命令执行与文档生成（可选）
 
