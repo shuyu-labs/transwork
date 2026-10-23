@@ -26,7 +26,7 @@
 
 **浏览器版 WebAgent**：不用装客户端，打开浏览器用后台账号登录，同一套员工与技能直接开工。
 
-| 登录：账号与权限来自后台 | 首页：选一位员工下达任务 |
+| 登录：账号与权限来自后台 | 首页：直接向数字员工下达任务 |
 | --- | --- |
 | <img src="assets/screenshots/09b-webagent-login.png" width="440" /> | <img src="assets/screenshots/09-webagent-home.png" width="440" /> |
 
@@ -39,7 +39,7 @@
 | <img src="assets/screenshots/01-admin-overview.png" width="440" /> | <img src="assets/screenshots/02-admin-agents.png" width="440" /> |
 | **AI 技能库** | **企业知识库** |
 | <img src="assets/screenshots/03-admin-skills.png" width="440" /> | <img src="assets/screenshots/04-admin-knowledge.png" width="440" /> |
-| **AI 模型库** | **数据驾驶舱** |
+| **AI 模型库** | **AI 数据看板** |
 | <img src="assets/screenshots/05-admin-models.png" width="440" /> | <img src="assets/screenshots/06-admin-dashboard.png" width="440" /> |
 | **客户端管理** | **通用安全** |
 | <img src="assets/screenshots/07-admin-clients.png" width="440" /> | <img src="assets/screenshots/08-admin-security.png" width="440" /> |
